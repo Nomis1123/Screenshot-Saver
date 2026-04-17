@@ -10,10 +10,16 @@ from pathlib import Path
 from mss import mss
 from mss import tools
 from pynput import keyboard
+import tkinter as tk
 
 # Global Variables
 SCREENSHOT_KEY = keyboard.Key.f9
 EXIT_KEY = keyboard.Key.f10
+
+start_x = None
+start_y = None
+end_x = None
+end_y = None
 
 SCREENSHOT_DIR = Path.home() / "screenshots"
 SCREENSHOT_DIR.mkdir(parents=True, exist_ok=True)
