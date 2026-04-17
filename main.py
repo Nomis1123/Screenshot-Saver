@@ -63,7 +63,8 @@ def start_snipping():
     root.geometry("1920x1080")
     root.overrideredirect(True)
     root.attributes('-fullscreen', True)
-    root.root.configure(background='lightblue', opacity=20)
+    root.attributes('-alpha', 0.3)
+    root.root.configure(background='lightblue')
 
     canvas = tk.Canvas(root, width=1920, height=1080, background='lightblue')
     canvas.pack(fill="both", expand=True)
@@ -81,6 +82,9 @@ def on_mouse_press(event):
 
 def on_mouse_drag(event):
     canvas.delete("snippet_rect")
+    canvas.create_rectangle(
+        start_x, start_y, event.x, event.y,
+        outline="red", width=1, tags="snippet_rect")
 
 def on_mouse_release(event):
     global end_x, end_y
