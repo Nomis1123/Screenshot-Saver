@@ -8,6 +8,7 @@ import os
 from datetime import datetime
 from pathlib import Path
 from mss import mss
+from mss import tools
 from pynput import keyboard
 
 # Global Variables
@@ -25,12 +26,12 @@ def screenshot_taker() -> bool:
         filePath = SCREENSHOT_DIR / f"{string_time}.png"
 
         with mss() as sct:
-            monitor = sct.monitors[0]
+            monitor = sct.monitors[1]
             data = sct.grab(monitor)
 
-            final_data = mss.tools.to_png(data.rgb, data.size, output=str(filePath))
+            final_data = tools.to_png(data.rgb, data.size, output=str(filePath))
 
-        print(f"Screenshot Saved to  + {filePath}")
+        print(f"Screenshot Saved to {filePath}")
         return True
 
     except Exception as e:
