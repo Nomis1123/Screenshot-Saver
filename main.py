@@ -28,14 +28,16 @@ def screenshot_taker() -> bool:
             monitor = sct.monitors[0]
             data = sct.grab(monitor)
 
-            final_data = mss.tools.to_png(data.rgb, data.size, output=filePath)
+            final_data = mss.tools.to_png(data.rgb, data.size, output=str(filePath))
 
-        print("Screenshot Saved to " + filePath)
+        print(f"Screenshot Saved to  + {filePath}")
         return True
 
     except Exception as e:
         print(f"Error taking screenshot: {e}")
         return False
+
+
 
 
 def main():
