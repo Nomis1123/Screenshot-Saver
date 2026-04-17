@@ -1,16 +1,27 @@
-# This is a sample Python script.
+"""
+Simple Screenshot Application
+Press F9 to take a screenshot of your entire screen.
+Press ESC to exit the application.
+"""
 
-# Press Ctrl+F5 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
+import os
+from datetime import datetime
+from pathlib import Path
+from mss import mss
+from pynput import keyboard
+
+# Global Variables
+SCREENSHOT_KEY = keyboard.Key.f9
+EXIT_KEY = keyboard.Key.f10
 
 
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press F9 to toggle the breakpoint.
 
+def main():
+    "Main function"
+    with keyboard.Listener(on_press=on_press) as listener:
+        listener.join()
 
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
-    print_hi('PyCharm')
+    print("Application Finished")
 
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+if __name__ == "__main__":
+    main()
