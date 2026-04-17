@@ -34,7 +34,7 @@ def screenshot_taker() -> bool:
         return True
 
     except Exception as e:
-        print(f"❌ Error taking screenshot: {e}")
+        print(f"Error taking screenshot: {e}")
         return False
 
 
