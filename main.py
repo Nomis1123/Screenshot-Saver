@@ -16,6 +16,7 @@ import tkinter as tk
 SCREENSHOT_KEY = keyboard.Key.f9
 EXIT_KEY = keyboard.Key.f10
 
+global canvas
 start_x = None
 start_y = None
 end_x = None
@@ -55,6 +56,41 @@ def on_press(key):
 
     except AttributeError as e:
         pass
+
+
+def start_snipping():
+    root = tk.Tk()
+    root.geometry("1920x1080")
+    root.overrideredirect(True)
+    root.attributes('-fullscreen', True)
+    root.root.configure(background='lightblue', opacity=20)
+
+    canvas = tk.Canvas(root, width=1920, height=1080, background='lightblue')
+    canvas.pack(fill="both", expand=True)
+    # next need to bind canvas to mouse functions
+    canvas.bind("<ButtonPress-1>", on_mouse_press)
+    canvas.bind("<B1-Motion>", on_mouse_drag)
+    canvas.bind("<ButtonRelease-1>", on_mouse_release())
+
+    root.mainloop()
+
+def on_mouse_press(event):
+    global start_x, start_y
+    start_x = event.x
+    start_y = event.y
+
+def on_mouse_drag(event):
+    canvas.delete("snippet_rect")
+
+def on_mouse_release(event):
+    global end_x, end_y
+    end_x = event.x
+    end_y = event.y
+
+    pass
+
+
+
 
 def main():
     "Main function"
