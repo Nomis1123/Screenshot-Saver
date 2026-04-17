@@ -37,8 +37,17 @@ def screenshot_taker() -> bool:
         print(f"Error taking screenshot: {e}")
         return False
 
+def on_press(key):
+    try:
+        if key == SCREENSHOT_KEY:
+            screenshot_taker()
 
+        elif key == EXIT_KEY:
+            print("Exiting application")
+            return False
 
+    except AttributeError as e:
+        pass
 
 def main():
     "Main function"
