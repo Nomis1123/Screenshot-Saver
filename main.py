@@ -59,8 +59,14 @@ def on_press(key):
 
 
 def start_snipping():
-    global canvas, root
+    global canvas, root, bg_photo
     root = tk.Tk()
+
+    with mss() as sct:
+        monitor = sct.monitors[1]
+        sct_img = sct.grab(monitor)
+        img = Image.frombytes("RGB", sct_img.size, sct_img.rgb)
+        bg_photo = ImageTk.PhotoImage(img)
 
     screen_width = root.winfo_screenwidth()
     screen_height = root.winfo_screenheight()
@@ -68,15 +74,16 @@ def start_snipping():
     root.overrideredirect(True)
     root.attributes('-topmost', True)
     root.lift()
-    root.attributes('-alpha', 0.3)
     root.configure(background='lightblue')
 
-    canvas = tk.Canvas(root, width=1920, height=1080, background='lightblue')
+    canvas = tk.Canvas(root, width=1920, height=1080)
     canvas.pack(fill="both", expand=True)
-    # next need to bind canvas to mouse functions
+
     canvas.bind("<ButtonPress-1>", on_mouse_press)
     canvas.bind("<B1-Motion>", on_mouse_drag)
     canvas.bind("<ButtonRelease-1>", on_mouse_release)
+
+    canvas.create_image(0, 0, image=bg_photo, anchor=tk.NW)
 
     root.mainloop()
 
