@@ -9,6 +9,7 @@ from datetime import datetime
 from pathlib import Path
 from mss import mss
 from mss import tools
+from PIL import Image, ImageTk
 from pynput import keyboard
 import tkinter as tk
 
@@ -16,7 +17,6 @@ import tkinter as tk
 SCREENSHOT_KEY = keyboard.Key.f9
 EXIT_KEY = keyboard.Key.f10
 
-global canvas
 start_x = None
 start_y = None
 end_x = None
@@ -26,15 +26,15 @@ SCREENSHOT_DIR = Path.home() / "screenshots"
 SCREENSHOT_DIR.mkdir(parents=True, exist_ok=True)
 
 
-def screenshot_taker() -> bool:
+def screenshot_taker(region) -> bool:
     try:
         currentTime = datetime.now()
         string_time = currentTime.strftime("%Y%m%d%H%M%S")
         filePath = SCREENSHOT_DIR / f"{string_time}.png"
 
         with mss() as sct:
-            monitor = sct.monitors[1]
-            data = sct.grab(monitor)
+            # monitor = sct.monitors[1]
+            data = sct.grab(region)
 
             final_data = tools.to_png(data.rgb, data.size, output=str(filePath))
 
@@ -48,7 +48,7 @@ def screenshot_taker() -> bool:
 def on_press(key):
     try:
         if key == SCREENSHOT_KEY:
-            screenshot_taker()
+            start_snipping()
 
         elif key == EXIT_KEY:
             print("Exiting application")
@@ -59,19 +59,24 @@ def on_press(key):
 
 
 def start_snipping():
+    global canvas, root
     root = tk.Tk()
-    root.geometry("1920x1080")
+
+    screen_width = root.winfo_screenwidth()
+    screen_height = root.winfo_screenheight()
+    root.geometry(f"{screen_width}x{screen_height}+0+0")
     root.overrideredirect(True)
-    root.attributes('-fullscreen', True)
+    root.attributes('-topmost', True)
+    root.lift()
     root.attributes('-alpha', 0.3)
-    root.root.configure(background='lightblue')
+    root.configure(background='lightblue')
 
     canvas = tk.Canvas(root, width=1920, height=1080, background='lightblue')
     canvas.pack(fill="both", expand=True)
     # next need to bind canvas to mouse functions
     canvas.bind("<ButtonPress-1>", on_mouse_press)
     canvas.bind("<B1-Motion>", on_mouse_drag)
-    canvas.bind("<ButtonRelease-1>", on_mouse_release())
+    canvas.bind("<ButtonRelease-1>", on_mouse_release)
 
     root.mainloop()
 
@@ -91,10 +96,14 @@ def on_mouse_release(event):
     end_x = event.x
     end_y = event.y
 
-    pass
+    left = min(start_x, end_x)
+    top = min(start_y, end_y)
+    width = abs(start_x - end_x)
+    height = abs(start_y - end_y)
 
-
-
+    monitor_region = {'top': top, 'left': left, 'width': width, 'height': height}
+    screenshot_taker(monitor_region)
+    root.destroy()
 
 def main():
     "Main function"
